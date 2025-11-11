@@ -1,0 +1,29 @@
+.top {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+}
+
+.choices {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  gap: 1em;
+}
+
+.playWindow {
+    display: flex;
+    flex-direction: column;
+    height: 95%;
+    width: clamp(80em, 70%, 100em);
+}
+
+.animeImage {
+  width: 20em;
+  aspect-ratio: 1 / 1;
+  border-radius: 12px;
+  object-fit: cover;
+}
