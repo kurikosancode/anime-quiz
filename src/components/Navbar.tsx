@@ -46,12 +46,14 @@ export default function Navbar() {
                     <Link to={paths.home} className={styles.sidebarLink} onClick={() => setOpen(false)}>Home</Link>
                     <Link to={paths.about} className={styles.link} onClick={() => setOpen(false)}>About</Link>
                     <Link to={paths.play} className={styles.link} onClick={() => setOpen(false)}>Play</Link>
+                    <Link to={paths.lobby} className={styles.link} onClick={() => setOpen(false)}>Lobby</Link>
                 </div>
 
                 <div className={styles.linkWrap}>
                     <Link to={paths.home} className={styles.link} onClick={() => setOpen(false)}>Home</Link>
                     <Link to={paths.about} className={styles.link} onClick={() => setOpen(false)}>About</Link>
                     <Link to={paths.play} className={styles.link} onClick={() => setOpen(false)}>Play</Link>
+                    <Link to={paths.lobby} className={styles.link} onClick={() => setOpen(false)}>Lobby</Link>
                 </div>
             </nav>
         </header>

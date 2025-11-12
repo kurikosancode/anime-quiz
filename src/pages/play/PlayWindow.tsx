@@ -17,7 +17,7 @@ function PlayWindow() {
 
     const animeCharacterFetcher = new AnimeCharacterFetcher();
     const animeImageFetcher = new AnimeImageFetcher();
-    const animes = ["One Piece", "Dr. Stone"];
+    const animes = ["One Punch Man"];
 
     const setPress = async (character: string) => {
         setPressed(true);
@@ -28,11 +28,6 @@ function PlayWindow() {
         await loadImage();
 
     };
-
-    const getScore = () => {
-        return score;
-    }
-
 
     async function loadImage() {
         try {
@@ -64,6 +59,7 @@ function PlayWindow() {
     return (
         <div className={style.playWindow}>
             <div className={style.top}>
+                <h1 id={style.scoreText}>Score: {score}</h1>
                 <img src={imageUrl} className={style.animeImage} />
             </div>
 

@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import Home from "../pages/Home";
 import About from "../pages/About";
+import Lobby from "../pages/lobby/Lobby";
 import Play from "../pages/play/Play";
 import paths from "../constants/paths";
 import MainLayout from "../layouts/MainLayout";
@@ -12,6 +13,7 @@ export default function AppRoutes() {
                 <Route path={paths.home} element={<Home />} />
                 <Route path={paths.about} element={<About />} />
                 <Route path={paths.play} element={<Play />} />
+                <Route path={paths.lobby} element={<Lobby />} />
             </Route>
         </Routes>
     );

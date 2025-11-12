@@ -78,3 +78,11 @@ main {
   flex: 1; /* take the remaining height */
   overflow: auto; /* optional: scroll if content overflows */
 }
+
+input {
+  outline: none; /* removes the blue/yellow outline on focus */
+}
+
+input:focus {
+  outline: none; /* ensures it stays removed when focused */
+}
