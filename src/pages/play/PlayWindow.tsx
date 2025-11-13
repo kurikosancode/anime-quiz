@@ -4,7 +4,7 @@ import COLORS from "../../constants/colors";
 import { useState, useEffect, useRef } from "react";
 import { AnimeCharacterFetcher } from "../../api/AnimeCharacterFetcher";
 import { AnimeImageFetcher } from "../../api/AnimeImageFetcher";
-import delayAfterChoice from "../../constants/delay";
+import delay from "../../constants/delay";
 import random from "../../utils/random";
 
 const boxColors = [COLORS.QUIZ_BLUE, COLORS.QUIZ_CYAN, COLORS.QUIZ_YELLOW, COLORS.QUIZ_RED];
@@ -40,7 +40,7 @@ function PlayWindow() {
                 setCharacters(newCharacters);
                 setPressed(false);
                 setCorrectCharacter(chosenCharacter);
-            }, delayAfterChoice);
+            }, delay.delayAfterChoice);
         } catch (e) {
             console.error("Failed to fetch character image." + e);
         }

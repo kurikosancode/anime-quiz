@@ -1,0 +1,51 @@
+
+
+.searchResult {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  width: 100%;
+  user-select: none;
+  transition: background-color 0.2s ease;
+  gap: 1em;
+  padding: 0.5em;
+}
+
+.searchResult:hover {
+  background-color: #e0e0e0;
+}
+
+
+.searchResult img {
+  max-width: 3em;
+  height: auto;
+  border-radius: 5px;
+}
+
+.searchResult p {
+  margin: 0;
+  font-size: 0.85em;
+  color: black;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.animeCard {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s ease;
+}
+
+.animeCard:hover {
+  background-color: #e0e0e0;
+}
+
+.textDiv {
+  display: flex;
+  flex-direction: column;
+}
+
