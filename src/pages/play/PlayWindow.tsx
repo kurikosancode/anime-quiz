@@ -17,7 +17,7 @@ function PlayWindow() {
 
     const animeCharacterFetcher = new AnimeCharacterFetcher();
     const animeImageFetcher = new AnimeImageFetcher();
-    const animes = ["One Punch Man"];
+    const animes = ["One Piece", "Seven Deadly Sins", "Hunter x Hunter"];
 
     const setPress = async (character: string) => {
         setPressed(true);
