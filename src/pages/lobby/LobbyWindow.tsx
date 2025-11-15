@@ -5,6 +5,8 @@ import AnimeResult from "../../components/anime_result/AnimeResult";
 import fetchAnime from "../../api/AnimeFetcher";
 import limits from "../../constants/limits";
 import delay from "../../constants/delay";
+import Container from "../../components/container/Container";
+import AnimeCard from "../../components/anime_card/AnimeCard";
 import api from "../../constants/api";
 import { useState, useEffect } from "react";
 
@@ -12,11 +14,16 @@ function LobbyWindow() {
     const [value, setValue] = useState("");
     const [loading, setLoading] = useState(false);
     const [animeResults, setAnimeResults] = useState([]);
-    const [animeInput, setAnimeInput] = useState<string[]>([]);
+    const [animeInput, setAnimeInput] = useState<AnimeResultProps[]>([]);
 
-    const selectAnime = (animeName: string) => {
-        setAnimeInput(prev => [...prev, animeName]);
+    const selectAnime = (anime: AnimeResultProps) => {
+        setAnimeInput(prev => [...prev, anime]);
     };
+
+    const removeAnime = (animeId: number) => {
+        setAnimeInput(prev => prev.filter(anime => anime.animeId !== animeId));
+    }
+
 
     const getAnimeResults = async (query: string) => {
         setLoading(true);
@@ -36,7 +43,7 @@ function LobbyWindow() {
                     animeUrl={anime.animeUrl}
                     imagePath={anime.imagePath}
                     genres={anime.genres}
-                    onSelect={() => selectAnime(anime.animeName)}
+                    onSelect={() => selectAnime(anime)}
                 />
             ))
         );
@@ -57,6 +64,18 @@ function LobbyWindow() {
     return (
         <div className={style.lobbyWindow}>
             <SearchDropdown loading={loading} placeholder={"Search Anime"} value={value} setValue={setValue} items={animeResults} />
+            <Container>
+                {animeInput.map(anime => (
+                    <AnimeCard
+                        key={anime.animeId}
+                        animeName={anime.animeName}
+                        animeImage={anime.imagePath}
+                        animeUrl={anime.animeUrl}
+                        onDelete={() => removeAnime(anime.animeId)}
+                    />
+                ))}
+            </Container>
+
         </div>
     );
 }

@@ -17,7 +17,7 @@ function PlayWindow() {
 
     const animeCharacterFetcher = new AnimeCharacterFetcher();
     const animeImageFetcher = new AnimeImageFetcher();
-    const animes = ["One Piece", "Seven Deadly Sins", "Hunter x Hunter"];
+    const animes = ["My stepmom's daughter is my ex",];
 
     const setPress = async (character: string) => {
         setPressed(true);
