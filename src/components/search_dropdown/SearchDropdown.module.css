@@ -7,8 +7,8 @@
 
 .searchInput {
     display: block;
-    font-size: 13px;
-    line-height: 1.5;
+    font-size: 1rem;
+    line-height: 2;
     border: 2px solid transparent;
     border-radius: 5px;
     width: 100%;
@@ -20,10 +20,11 @@
     height: 100%;
     background-color: white;
     border-radius: 5px;
+    gap: .5rem;
 }
 
 .searchIconDiv {
-    padding-left: 0.5em;
+    padding-left: 0.7rem;
     display: flex;
     align-items: center;
     justify-content: center;

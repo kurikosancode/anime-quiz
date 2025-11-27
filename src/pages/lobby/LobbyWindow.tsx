@@ -9,15 +9,24 @@ import Container from "../../components/container/Container";
 import AnimeCard from "../../components/anime_card/AnimeCard";
 import api from "../../constants/api";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import paths from "../../constants/paths";
 
 function LobbyWindow() {
+    const navigate = useNavigate();
     const [value, setValue] = useState("");
     const [loading, setLoading] = useState(false);
     const [animeResults, setAnimeResults] = useState([]);
     const [animeInput, setAnimeInput] = useState<AnimeResultProps[]>([]);
 
+    const play = () => {
+        navigate(paths.play, {
+            state: animeInput.map(anime => anime.animeName),
+        });
+    }
+
     const selectAnime = (anime: AnimeResultProps) => {
-        setAnimeInput(prev => [...prev, anime]);
+        setAnimeInput(prev => prev.find(a => a.animeId === anime.animeId) ? prev : [...prev, anime]);
     };
 
     const removeAnime = (animeId: number) => {
@@ -63,19 +72,24 @@ function LobbyWindow() {
 
     return (
         <div className={style.lobbyWindow}>
-            <SearchDropdown loading={loading} placeholder={"Search Anime"} value={value} setValue={setValue} items={animeResults} />
-            <Container>
-                {animeInput.map(anime => (
-                    <AnimeCard
-                        key={anime.animeId}
-                        animeName={anime.animeName}
-                        animeImage={anime.imagePath}
-                        animeUrl={anime.animeUrl}
-                        onDelete={() => removeAnime(anime.animeId)}
-                    />
-                ))}
-            </Container>
-
+            <h1 className={style.header}>Anime Lobby</h1>
+            <div className={style.searchDiv}>
+                <SearchDropdown loading={loading} placeholder={"Search Anime"} value={value} setValue={setValue} items={animeResults} />
+                <Container>
+                    {animeInput.map(anime => (
+                        <AnimeCard
+                            key={anime.animeId}
+                            animeName={anime.animeName}
+                            animeImage={anime.imagePath}
+                            animeUrl={anime.animeUrl}
+                            onDelete={() => removeAnime(anime.animeId)}
+                        />
+                    ))}
+                </Container>
+            </div>
+            <div className={style.buttonDiv}>
+                <button className={style.playButton} onClick={play}>Play</button>
+            </div>
         </div>
     );
 }

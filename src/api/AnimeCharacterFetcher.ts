@@ -13,7 +13,8 @@ class AnimeFetchingError extends Error {
 export class AnimeCharacterFetcher {
     private readonly MAX_CHARACTER_RETRIEVED = 4;
     private readonly ERROR_MESSAGE = "Error fetching data.";
-    private characterChosen: string[] = [];
+    private usedCharacters = new Set<string>();
+
 
     public async getListOfRandomCharacters(animeTitle: string): Promise<string[]> {
         const listOfAnimeCharacters = await this.getListOfCharacters(animeTitle);
@@ -35,7 +36,10 @@ export class AnimeCharacterFetcher {
         const originalCharacterList = await this.getListOfCharacters(animeTitle, false);
         if (!originalCharacterList) throw new AnimeFetchingError();
 
-        const chosenCharacterList: string[] = [];
+        const chosenCharacter = this.chooseCorrectCharacter(originalCharacterList);
+        console.log(this.usedCharacters);
+
+        const chosenCharacterList: string[] = [chosenCharacter];
         while (chosenCharacterList.length < this.MAX_CHARACTER_RETRIEVED) {
             const chosenCharacter = this.chooseRandomCharacter(originalCharacterList);
             const characterName = this.getCharacterName(chosenCharacter);
@@ -43,14 +47,25 @@ export class AnimeCharacterFetcher {
             chosenCharacterList.push(characterName);
         }
 
-        const chosenCharacter = this.chooseRandomCharacter(chosenCharacterList);
         return [chosenCharacter, chosenCharacterList];
     }
 
+    private chooseCorrectCharacter(characterList: string[]): string {
+        let character;
+        let characterName;
+        do {
+            character = this.chooseRandomCharacter(characterList);
+            characterName = this.getCharacterName(character);
+        } while (this.usedCharacters.has(characterName));
+
+        this.usedCharacters.add(characterName);
+        return characterName;
+    }
+
     private chooseRandomCharacter(characterList: string[]): string {
-        const chosenCharacter = random.getRandom(characterList);
-        this.characterChosen.push(chosenCharacter);
-        return chosenCharacter;
+        let character;
+        character = random.getRandom(characterList);
+        return character;
     }
 
     private getCharacterName(character: any): string {

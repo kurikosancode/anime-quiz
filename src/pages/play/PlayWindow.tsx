@@ -1,29 +1,34 @@
 import ChoiceBox from "../../components/choice_box/ChoiceBox";
 import style from "./PlayWindow.module.css";
 import COLORS from "../../constants/colors";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
+import { useLocation } from "react-router-dom";
 import { AnimeCharacterFetcher } from "../../api/AnimeCharacterFetcher";
 import { AnimeImageFetcher } from "../../api/AnimeImageFetcher";
 import delay from "../../constants/delay";
 import random from "../../utils/random";
 
+
 const boxColors = [COLORS.QUIZ_BLUE, COLORS.QUIZ_CYAN, COLORS.QUIZ_YELLOW, COLORS.QUIZ_RED];
+
+type AnimeState = string[]; // or whatever your state is
+
+
 function PlayWindow() {
+    const { state } = useLocation() as { state: AnimeState };  // stores the anime input from lobby
     const [characters, setCharacters] = useState<string[]>([]);
     const [score, setScore] = useState<number>(0);
     const [correctCharacter, setCorrectCharacter] = useState<string | null>(null);
     const [pressed, setPressed] = useState<boolean>(false);
     const [imageUrl, setImageUrl] = useState<string>("");
 
-    const animeCharacterFetcher = new AnimeCharacterFetcher();
-    const animeImageFetcher = new AnimeImageFetcher();
-    const animes = ["My stepmom's daughter is my ex",];
+    const animeCharacterFetcher = useMemo(() => new AnimeCharacterFetcher(), []);
+    const animeImageFetcher = useMemo(() => new AnimeImageFetcher(), []);
 
     const setPress = async (character: string) => {
         setPressed(true);
         if (correctCharacter == character) {
             setScore(score => score + 1);
-            console.log(score);
         }
         await loadImage();
 
@@ -31,9 +36,10 @@ function PlayWindow() {
 
     async function loadImage() {
         try {
-            const animeTitle = random.getRandom(animes);
+            const animeTitle = random.getRandom(state);
             let [chosenCharacter, newCharacters] = await animeCharacterFetcher.getRandomCharacterForQuiz(animeTitle);
             const blob = await animeImageFetcher.retrieveImage(animeTitle, chosenCharacter);
+            console.log(chosenCharacter, newCharacters);
             const url = URL.createObjectURL(blob);
             setTimeout(() => {
                 setImageUrl(url);
