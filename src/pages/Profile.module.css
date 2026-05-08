@@ -1,0 +1,71 @@
+.profilePage {
+  padding: 2rem 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: #1a1a1a;
+  color: #f3f3f3;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.loadingState {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.streakSection {
+  background-color: #242424;
+  border-radius: 12px;
+  border: 1px solid #3c3c3c;
+  padding: 1.5rem;
+}
+
+.statsSection {
+  background-color: #242424;
+  border-radius: 12px;
+  border: 1px solid #3c3c3c;
+  padding: 1.5rem;
+}
+
+.detailedStatsSection {
+  background-color: #242424;
+  border-radius: 12px;
+  border: 1px solid #3c3c3c;
+  padding: 1.5rem;
+}
+
+.sectionTitle {
+  margin: 0 0 1.5rem 0;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #f3f3f3;
+}
+
+.statGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.statColumns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+@media (max-width: 768px) {
+  .profilePage {
+    padding: 1rem;
+  }
+
+  .statGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .statColumns {
+    grid-template-columns: 1fr;
+  }
+}

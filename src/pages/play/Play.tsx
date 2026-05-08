@@ -1,10 +1,21 @@
 import PlayWindow from "./PlayWindow";
 import style from "./Play.module.css";
-import COLORS from "../../constants/colors";
+import { useState } from "react";
 
 
 function Play() {
-    return <div className={style.play} style={{ backgroundColor: COLORS.QUIZ_DARK_PURPLE }}><PlayWindow /></div>;
+    const [timeProgress, setTimeProgress] = useState(0);
+
+    return (
+        <div className={style.play}>
+            <div className={style.timeBarWrap} aria-label="Time remaining" aria-live="polite">
+                <div className={style.timeBarTrack}>
+                    <div className={style.timeBarFill} style={{ width: `${timeProgress}%` }} />
+                </div>
+            </div>
+            <PlayWindow onTimeProgressChange={setTimeProgress} />
+        </div>
+    );
 }
 
 export default Play;

@@ -3,24 +3,28 @@ import style from "./SearchDropdown.module.css";
 import icons from "../../constants/icons";
 
 interface SearchDropdownProps {
-    value: any;
+    value: string;
     placeholder: string;
     loading: boolean;
-    setValue: (value: any) => void;
+    setValue: (value: string) => void;
     items: React.ReactNode[];
+    emptyText?: string;
 }
 
 const loadingText = "Loading...";
 
-function SearchDropdown({ value, loading, setValue, items, placeholder }: SearchDropdownProps) {
+function SearchDropdown({ value, loading, setValue, items, placeholder, emptyText = "No results" }: SearchDropdownProps) {
     const [focused, setFocused] = useState(false);
     const resultClassNames = [style.searchResults];
+    const showResults = focused && (loading || items.length > 0 || value.trim().length > 0);
+
     if (loading && focused) {
         resultClassNames.push(style.searchResultsLoading);
     }
-    if (!loading && focused && items.length > 0) {
+    if (showResults && !loading) {
         resultClassNames.push(style.searchResultsShowing);
     }
+
     return (
         < div className={style.searchDropdown} >
             <div className={style.searchBar}>
@@ -35,6 +39,7 @@ function SearchDropdown({ value, loading, setValue, items, placeholder }: Search
                     onChange={(e) => setValue(e.target.value)}
                     placeholder={placeholder}
                     className={style.searchInput}
+                    aria-label={placeholder}
                 />
             </div>
             <div className={resultClassNames.join(" ")}>
@@ -46,6 +51,7 @@ function SearchDropdown({ value, loading, setValue, items, placeholder }: Search
                                 {item}
                             </li>
                         ))}
+                        {items.length === 0 && <li className={style.emptyResult}>{emptyText}</li>}
                     </ul>
                 )}
             </div>

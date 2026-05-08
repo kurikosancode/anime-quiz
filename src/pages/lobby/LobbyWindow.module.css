@@ -1,32 +1,241 @@
 .lobbyWindow {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-content: center;
-    width: 50%;
-    height: 100%;
-    gap: 1rem;
+    width: min(90rem, calc(100vw - 2rem));
+    gap: 1.15rem;
+    margin: 0 auto;
+    padding: 1.35rem;
+    border-radius: 12px;
+    box-sizing: border-box;
+    min-height: calc(100vh - 12rem);
 }
 
-.header {   
+.hero {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 0.2rem 0 0.75rem;
+}
+
+.header {
+    margin: 0;
     text-align: center;
-    color: white;
+    color: #f4f4f4;
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.05;
 }
 
-.buttonDiv {
+.subHeader {
+    margin: 0;
+    text-align: center;
+    color: #c8c8c8;
+    font-size: 0.95rem;
+}
+
+.panelGrid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr);
+    gap: 1.15rem;
+    align-items: start;
+    margin-top: 0.25rem;
+}
+
+.leftColumn {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+}
+
+.panel {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    min-height: 0;
+    padding: 0.95rem;
+    border: 1px solid #333;
+    border-radius: 10px;
+    background-color: #262626;
+}
+
+.settingsPanel {
+    position: sticky;
+    top: 1.35rem;
+    min-height: 14rem;
+}
+
+.panelHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.sectionTitle {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #f0f0f0;
+}
+
+.metaText {
+    color: #bdbdbd;
+    font-size: 0.82rem;
+}
+
+.helperText {
+    margin: 0;
+    color: #bfbfbf;
+    font-size: 0.9rem;
+}
+
+.searchDiv {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.settingsGrid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+}
+
+.settingField {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    color: #ededed;
+    font-size: 0.9rem;
+}
+
+.settingField span {
+    color: #cfcfcf;
+    font-size: 0.85rem;
+}
+
+.settingField select {
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid #595959;
+    background-color: #1f1f1f;
+    color: #f4f4f4;
+    padding: 0.55rem 0.7rem;
+    font: inherit;
+}
+
+.settingSummary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.settingSummary p {
+    margin: 0;
+    padding: 0.35rem 0.55rem;
+    border-radius: 999px;
+    border: 1px solid #4e4e4e;
+    background-color: #202020;
+    color: #dcdcdc;
+    font-size: 0.82rem;
+}
+
+.bottomActions {
     display: flex;
     justify-content: center;
-    margin-top: 1rem;
+    width: 100%;
+    padding-top: 0.25rem;
+}
+
+.emptyState {
+    margin-top: 0.1rem;
+    padding: 0.75rem;
+    border-radius: 8px;
+    border: 1px dashed #4f4f4f;
+    background-color: #1f1f1f;
+}
+
+.emptyState p {
+    margin: 0;
+    color: #dddddd;
+    font-size: 0.9rem;
+}
+
+.emptyState span {
+    color: #ababab;
+    font-size: 0.85rem;
 }
 
 .playButton {
-    width: 5rem;
+    min-width: 9rem;
+    border: 1px solid #d9d9d9;
+    background-color: #f3f3f3;
+    color: #1d1d1d;
+    font-weight: 600;
+    border-radius: 8px;
 }
 
-.playButton button:focus,
-.playButton button:active {
+.secondaryButton {
+    min-width: 5.75rem;
+    padding: 0.4rem 0.8rem;
+    background-color: #313131;
+    color: #ececec;
+    border: 1px solid #5c5c5c;
+    border-radius: 8px;
+}
+
+.secondaryButton:hover:enabled {
+    background-color: #3a3a3a;
+}
+
+.playButton:hover:enabled {
+    background-color: #ffffff;
+}
+
+.secondaryButton:disabled,
+.playButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.playButton:focus,
+.playButton:active,
+.secondaryButton:focus,
+.secondaryButton:active {
     outline: none;
-    box-shadow: none; 
-    background-color: red;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
+}
+
+@media (max-width: 900px) {
+    .panelGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .leftColumn {
+        gap: 0.75rem;
+    }
+
+    .panel {
+        min-height: 0;
+    }
+
+    .settingsPanel {
+        position: static;
+    }
+
+}
+
+@media (max-width: 720px) {
+    .lobbyWindow {
+        width: 100%;
+        padding: 0.9rem;
+    }
+
+    .header {
+        font-size: 2rem;
+    }
+
+    .secondaryButton {
+        min-width: 5.2rem;
+    }
 }
 

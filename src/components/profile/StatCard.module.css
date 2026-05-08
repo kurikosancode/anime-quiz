@@ -1,0 +1,30 @@
+.card {
+  background-color: #1f1f1f;
+  border-radius: 8px;
+  border: 1px solid #3c3c3c;
+  padding: 1.2rem;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.card:hover {
+  border-color: #555;
+  background-color: #252525;
+}
+
+.label {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #a0a0a0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.value {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #f3f3f3;
+}

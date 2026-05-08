@@ -1,0 +1,103 @@
+.section {
+  background-color: #1f1f1f;
+  border-radius: 8px;
+  border: 1px solid #3c3c3c;
+  padding: 1.5rem;
+}
+
+.title {
+  margin: 0 0 1.5rem 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #f3f3f3;
+}
+
+.empty {
+  margin: 1rem 0 0 0;
+  color: #808080;
+  font-size: 0.95rem;
+}
+
+.gameList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.gameItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #2a2a2a;
+  border-radius: 6px;
+  border: 1px solid #3c3c3c;
+  transition: all 0.2s ease;
+}
+
+.gameItem:hover {
+  border-color: #555;
+  background-color: #303030;
+}
+
+.gameInfo {
+  flex: 1;
+}
+
+.animeTitle {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #f3f3f3;
+}
+
+.timestamp {
+  margin: 0.3rem 0 0 0;
+  font-size: 0.8rem;
+  color: #a0a0a0;
+}
+
+.gameResult {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.resultBadge {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.resultBadge.win {
+  background-color: rgba(38, 166, 65, 0.2);
+  color: #26a641;
+}
+
+.resultBadge.loss {
+  background-color: rgba(255, 127, 127, 0.2);
+  color: #ff7f7f;
+}
+
+.score {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #b8b8b8;
+  min-width: 50px;
+  text-align: right;
+}
+
+@media (max-width: 480px) {
+  .gameItem {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .gameResult {
+    width: 100%;
+    justify-content: space-between;
+  }
+}

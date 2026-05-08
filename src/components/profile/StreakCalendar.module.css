@@ -1,0 +1,185 @@
+.calendarContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.streakStats {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.streakStat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.streakLabel {
+  font-size: 0.8rem;
+  color: #a0a0a0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.streakValue {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #26a641;
+}
+
+.divider {
+  width: 1px;
+  height: 60px;
+  background-color: #3c3c3c;
+}
+
+.calendarWrapper {
+  display: flex;
+  gap: 0.5rem;
+  background-color: #1f1f1f;
+  border-radius: 8px;
+  padding: 1rem;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.dayLabelsColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding-top: 0.15rem;
+  flex-shrink: 0;
+}
+
+.dayLabel {
+  width: 18px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6rem;
+  color: #808080;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.calendar {
+  display: flex;
+  gap: 0.15rem;
+}
+
+.week {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.day {
+  width: 16px;
+  height: 16px;
+  border-radius: 2px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.day:hover {
+  transform: scale(1.15);
+  filter: brightness(1.2);
+}
+
+.empty {
+  background-color: #505050;
+}
+
+.level0 {
+  background-color: #0e4429;
+}
+
+.level1 {
+  background-color: #006d32;
+}
+
+.level2 {
+  background-color: #26a641;
+}
+
+.level3 {
+  background-color: #39d353;
+}
+
+.legend {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  font-size: 0.8rem;
+  color: #a0a0a0;
+  flex-wrap: wrap;
+}
+
+.legendLabel {
+  margin: 0 0.3rem;
+  font-weight: 600;
+}
+
+.legendSquare {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  border: none;
+}
+
+@media (max-width: 768px) {
+  .day {
+    width: 18px;
+    height: 18px;
+  }
+
+  .dayLabel {
+    font-size: 0.6rem;
+    width: 20px;
+    height: 18px;
+  }
+
+  .legendSquare {
+    width: 13px;
+    height: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .day {
+    width: 16px;
+    height: 16px;
+  }
+
+  .dayLabel {
+    font-size: 0.55rem;
+    width: 18px;
+    height: 16px;
+  }
+
+  .calendarWrapper {
+    gap: 0.6rem;
+    padding: 0.8rem;
+  }
+
+  .streakValue {
+    font-size: 1.8rem;
+  }
+
+  .legendSquare {
+    width: 12px;
+    height: 12px;
+  }
+}

@@ -1,7 +1,11 @@
-import axios, { all } from "axios";
+import axios from "axios";
 import api from "../constants/api";
 import AnimeCache from "../cache/AnimeCache";
 import random from "../utils/random";
+import { getCharacterCacheKey } from "./cacheKeys";
+import type { AniListCharactersResponse, AnimeCharacterNode } from "../types/animeApi";
+
+type Difficulty = "easy" | "medium" | "hard";
 
 class AnimeFetchingError extends Error {
     constructor(message = "Error fetching data.") {
@@ -12,46 +16,52 @@ class AnimeFetchingError extends Error {
 
 export class AnimeCharacterFetcher {
     private readonly MAX_CHARACTER_RETRIEVED = 4;
-    private readonly ERROR_MESSAGE = "Error fetching data.";
     private usedCharacters = new Set<string>();
 
 
     public async getListOfRandomCharacters(animeTitle: string): Promise<string[]> {
         const listOfAnimeCharacters = await this.getListOfCharacters(animeTitle);
-        if (!listOfAnimeCharacters) throw new AnimeFetchingError();
 
         return listOfAnimeCharacters
             .slice(0, this.MAX_CHARACTER_RETRIEVED)
             .map((character) => this.getCharacterName(character));
     }
 
-    private async getListOfCharacters(animeTitle: string, shuffleList = true): Promise<any[] | false> {
-        const listOfAnimeCharacters = await this.retrieveAnimeCharactersJson(animeTitle);
-        if (listOfAnimeCharacters === this.ERROR_MESSAGE) return false;
-
-        return listOfAnimeCharacters;
+    private async getListOfCharacters(animeTitle: string): Promise<AnimeCharacterNode[]> {
+        return this.retrieveAnimeCharactersJson(animeTitle);
     }
 
-    public async getRandomCharacterForQuiz(animeTitle: string): Promise<[string, string[]]> {
-        const originalCharacterList = await this.getListOfCharacters(animeTitle, false);
-        if (!originalCharacterList) throw new AnimeFetchingError();
+    public async getRandomCharacterForQuiz(animeTitle: string, difficulty: Difficulty = "medium"): Promise<[string, string[]]> {
+        const originalCharacterList = await this.getListOfCharacters(animeTitle);
 
-        const chosenCharacter = this.chooseCorrectCharacter(originalCharacterList);
-        console.log(this.usedCharacters);
+        const poolForCorrect = this.getPoolByDifficulty(originalCharacterList, difficulty);
+        const chosenCharacter = this.chooseCorrectCharacter(poolForCorrect.length ? poolForCorrect : originalCharacterList);
 
         const chosenCharacterList: string[] = [chosenCharacter];
         while (chosenCharacterList.length < this.MAX_CHARACTER_RETRIEVED) {
-            const chosenCharacter = this.chooseRandomCharacter(originalCharacterList);
-            const characterName = this.getCharacterName(chosenCharacter);
+            const candidate = this.chooseRandomCharacter(originalCharacterList);
+            const characterName = this.getCharacterName(candidate);
             if (chosenCharacterList.includes(characterName)) continue;
             chosenCharacterList.push(characterName);
+        }
+
+        for (let index = chosenCharacterList.length - 1; index > 0; index--) {
+            const swapIndex = Math.floor(Math.random() * (index + 1));
+            [chosenCharacterList[index], chosenCharacterList[swapIndex]] = [chosenCharacterList[swapIndex], chosenCharacterList[index]];
         }
 
         return [chosenCharacter, chosenCharacterList];
     }
 
-    private chooseCorrectCharacter(characterList: string[]): string {
-        let character;
+    private chooseCorrectCharacter(characterList: AnimeCharacterNode[]): string {
+        if (characterList.length === 0) {
+            throw new AnimeFetchingError("No characters were found for the selected anime.");
+        }
+        if (this.usedCharacters.size >= characterList.length) {
+            this.usedCharacters.clear();
+        }
+
+        let character: AnimeCharacterNode;
         let characterName;
         do {
             character = this.chooseRandomCharacter(characterList);
@@ -62,44 +72,48 @@ export class AnimeCharacterFetcher {
         return characterName;
     }
 
-    private chooseRandomCharacter(characterList: string[]): string {
-        let character;
-        character = random.getRandom(characterList);
-        return character;
+    private getPoolByDifficulty(characterList: AnimeCharacterNode[], difficulty: Difficulty): AnimeCharacterNode[] {
+        if (!characterList || characterList.length === 0) return [];
+
+        const sorted = [...characterList].sort((a, b) => (b.favourites || 0) - (a.favourites || 0));
+        const n = sorted.length;
+
+        if (difficulty === "easy") {
+            const cutoff = Math.max(1, Math.ceil(n * 0.3));
+            return sorted.slice(0, cutoff);
+        }
+
+        if (difficulty === "medium") {
+            const cutoff = Math.max(1, Math.ceil(n * 0.65));
+            return sorted.slice(0, cutoff);
+        }
+        // hard: return full list (more obscure characters allowed)
+        return characterList;
     }
 
-    private getCharacterName(character: any): string {
+    private chooseRandomCharacter(characterList: AnimeCharacterNode[]): AnimeCharacterNode {
+        return random.getRandom(characterList);
+    }
+
+    private getCharacterName(character: AnimeCharacterNode): string {
         return character?.name?.full || "Unknown";
     }
 
-    private extractAnimeCharacters(animeCharactersJson: any): any[] | string {
-        if (!animeCharactersJson || animeCharactersJson === this.ERROR_MESSAGE) {
-            return this.ERROR_MESSAGE;
-        }
-
-        try {
-            const listOfAnimeCharacters = animeCharactersJson.data.Page.media[0].characters.nodes;
-            if (!listOfAnimeCharacters) return this.ERROR_MESSAGE;
-            return listOfAnimeCharacters;
-        } catch {
-            return this.ERROR_MESSAGE;
-        }
-    }
-
-    private async retrieveAnimeCharactersJson(animeTitle: string, maxPages: number = 2): Promise<any> {
-        const cached = AnimeCache.get(`characters_${animeTitle}`);
+    private async retrieveAnimeCharactersJson(animeTitle: string, maxPages: number = 2): Promise<AnimeCharacterNode[]> {
+        const cacheKey = getCharacterCacheKey(animeTitle);
+        const cached = AnimeCache.get(cacheKey) as AnimeCharacterNode[] | null;
         if (cached) return cached;
 
         const maxPerPage = 25;
-        let allCharacters: any[] = [];
+        const allCharacters: AnimeCharacterNode[] = [];
         let page = 1;
         let hasMore = true;
 
         while (hasMore && page <= maxPages) {
             const pageData = await this.getJsonPage(animeTitle, page, maxPerPage);
-            if (!pageData || pageData === this.ERROR_MESSAGE) break;
+            if (!pageData) break;
 
-            const nodes = pageData.data?.Page?.media[0]?.characters?.nodes || [];
+            const nodes = pageData.data?.Page?.media?.[0]?.characters?.nodes || [];
             allCharacters.push(...nodes);
             if (nodes.length < maxPerPage) {
                 hasMore = false;
@@ -107,12 +121,20 @@ export class AnimeCharacterFetcher {
                 page++;
             }
         }
-        AnimeCache.set(animeTitle, allCharacters);
+        if (allCharacters.length === 0) {
+            throw new AnimeFetchingError("No characters were found for the selected anime.");
+        }
+
+        AnimeCache.set(cacheKey, allCharacters);
 
         return allCharacters;
     }
 
-    private async getJsonPage(animeTitle: string, page: number, perPage: number = 50): Promise<any> {
+    private async getJsonPage(
+        animeTitle: string,
+        page: number,
+        perPage: number = 50
+    ): Promise<AniListCharactersResponse | null> {
         const query = `
       query ($search: String, $page: Int, $perPage: Int) {
         Page {
@@ -122,6 +144,7 @@ export class AnimeCharacterFetcher {
                 name {
                   full
                 }
+                favourites
                 image {
                   large
                 }
@@ -135,10 +158,10 @@ export class AnimeCharacterFetcher {
         const variables = { search: animeTitle, page, perPage };
 
         try {
-            const response = await axios.post(api.apiUrl, { query, variables });
+            const response = await axios.post<AniListCharactersResponse>(api.apiUrl, { query, variables });
             return response.data;
         } catch {
-            return this.ERROR_MESSAGE;
+            return null;
         }
     }
 

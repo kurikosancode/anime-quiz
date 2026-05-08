@@ -73,3 +73,16 @@ export default defineConfig([
   },
 ])
 ```
+
+## Firebase Auth + Firestore Setup
+
+This project is prepared to use Firebase Authentication and Firestore for player accounts.
+
+1. Create a Firebase project.
+2. Enable `Authentication` with `Email/Password` provider.
+3. Create a `Cloud Firestore` database.
+4. Copy `.env.example` to `.env`.
+5. Fill all `VITE_FIREBASE_*` values from your Firebase web app settings.
+6. Run the app with `npm run dev`.
+
+Firestore user documents are stored in `users/{uid}` and include `username`, `usernameLower`, `email`, and `createdAt`.

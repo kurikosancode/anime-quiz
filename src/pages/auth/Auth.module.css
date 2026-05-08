@@ -1,0 +1,134 @@
+.authPage {
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background-color: #212121;
+}
+
+.authCard {
+  width: min(28rem, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: 1.15rem;
+  border-radius: 12px;
+  border: 1px solid #3c3c3c;
+  background-color: #272727;
+  color: #f3f3f3;
+}
+
+.authTitle {
+  margin: 0;
+  font-size: 1.6rem;
+}
+
+.authSubtitle {
+  margin: 0;
+  color: #c8c8c8;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.field input {
+  border-radius: 8px;
+  border: 1px solid #545454;
+  background: #1d1d1d;
+  color: #f3f3f3;
+  padding: 0.55rem 0.7rem;
+  font: inherit;
+}
+
+.primaryButton {
+  border-radius: 8px;
+  border: 1px solid #d6d6d6;
+  background: #f3f3f3;
+  color: #1f1f1f;
+  font-weight: 600;
+  padding: 0.55rem 0.9rem;
+  cursor: pointer;
+}
+
+.primaryButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.secondaryButton {
+  border-radius: 8px;
+  border: 1px solid #4f4f4f;
+  background: #1f1f1f;
+  color: #f3f3f3;
+  font-weight: 600;
+  padding: 0.55rem 0.9rem;
+  cursor: pointer;
+}
+
+.secondaryButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.messageError {
+  margin: 0;
+  color: #ff8f8f;
+}
+
+.messageSuccess {
+  margin: 0;
+  color: #95ec95;
+}
+
+.authSwitch {
+  margin: 0;
+  color: #cfcfcf;
+}
+
+.authSwitch a {
+  color: #f6f6f6;
+}
+
+.buttonRow {
+  display: flex;
+  gap: 0.55rem;
+  align-items: center;
+}
+
+.buttonRow .secondaryButton {
+  flex: 1;
+}
+
+.googleIconButton {
+  width: 2.4rem;
+  height: 2.4rem;
+  flex-shrink: 0;
+  border-radius: 8px;
+  border: 1px solid #4f4f4f;
+  background: #1f1f1f;
+  padding: 0.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.googleIconButton:hover:not(:disabled) {
+  border-color: #6f6f6f;
+  background: #2a2a2a;
+}
+
+.googleIconButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.googleIconButton svg {
+  width: 100%;
+  height: 100%;
+}

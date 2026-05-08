@@ -3,13 +3,18 @@
   line-height: 1.5;
   font-weight: 400;
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+*,
+*::before,
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 a {
@@ -23,8 +28,9 @@ a:hover {
 
 
 h1 {
-  font-size: 3.2em;
+  font-size: clamp(1.9rem, 4vw, 2.8rem);
   line-height: 1.1;
+  margin: 0;
 }
 
 button {
@@ -64,6 +70,7 @@ body, #root {
   flex-direction: column;
   height: 100%;
   margin: 0;
+  overflow-x: hidden;
 }
 
 header {
@@ -74,12 +81,6 @@ header {
 main {
   flex: 1; /* take the remaining height */
   overflow: auto; /* optional: scroll if content overflows */
-}
-
-input {
-  outline: none; /* removes the blue/yellow outline on focus */
-}
-
-input:focus {
-  outline: none; /* ensures it stays removed when focused */
+  min-width: 0;
+  background-color: #212121;
 }

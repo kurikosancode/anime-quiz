@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import navbarConstants from "../constants/navbar-constants";
 import websiteInfo from "../constants/website-info";
 import paths from "../constants/paths";
+import { subscribeToAuthState, logoutPlayer } from "../auth/playerAuth";
 import styles from "./Navbar.module.css";
 
 const resize = "resize";
@@ -11,6 +12,9 @@ const xLogo = "×";
 
 export default function Navbar() {
     const [open, setOpen] = useState(false);
+    const [currentPlayerName, setCurrentPlayerName] = useState<string | null>(null);
+    const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+    const isLoggedIn = currentPlayerName !== null;
 
     useEffect(() => {
         const handleResize = () => {
@@ -22,6 +26,68 @@ export default function Navbar() {
         window.addEventListener(resize, handleResize);
         return () => window.removeEventListener(resize, handleResize);
     }, []);
+
+    useEffect(() => {
+        const unsubscribe = subscribeToAuthState((player) => {
+            setCurrentPlayerName(player?.username ?? null);
+            if (!player) {
+                setProfileMenuOpen(false);
+            }
+        });
+
+        return unsubscribe;
+    }, []);
+
+    useEffect(() => {
+        const handleWindowClick = (event: MouseEvent) => {
+            const target = event.target as HTMLElement | null;
+            if (target && !target.closest("[data-profile-menu]")) {
+                setProfileMenuOpen(false);
+            }
+        };
+
+        window.addEventListener("click", handleWindowClick);
+        return () => window.removeEventListener("click", handleWindowClick);
+    }, []);
+
+    const handleLogout = async () => {
+        await logoutPlayer();
+        setCurrentPlayerName(null);
+        setProfileMenuOpen(false);
+        setOpen(false);
+    };
+
+    const DefaultAvatar = () => (
+        <svg className={styles.avatarIcon} viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="8.2" r="3.4" />
+            <path d="M4.8 19.2c1.7-3.3 4-5 7.2-5s5.5 1.7 7.2 5" />
+        </svg>
+    );
+
+    const ProfileMenu = () => (
+        <div className={styles.profileMenuWrap} data-profile-menu>
+            <button
+                className={styles.avatarButton}
+                onClick={() => setProfileMenuOpen((value) => !value)}
+                aria-label="Open profile menu"
+                aria-expanded={profileMenuOpen}
+                type="button"
+            >
+                <DefaultAvatar />
+            </button>
+            {profileMenuOpen && (
+                <div className={styles.profileMenu}>
+                    <div className={styles.profileMenuName}>{currentPlayerName}</div>
+                    <Link to={paths.profile} className={styles.profileMenuItem} onClick={() => setProfileMenuOpen(false)}>
+                        Profile
+                    </Link>
+                    <button className={styles.profileMenuItem} onClick={handleLogout} type="button">
+                        Logout
+                    </button>
+                </div>
+            )}
+        </div>
+    );
 
     return (
         <header className={styles.header}>
@@ -44,16 +110,30 @@ export default function Navbar() {
                     </div>
 
                     <Link to={paths.home} className={styles.sidebarLink} onClick={() => setOpen(false)}>Home</Link>
-                    <Link to={paths.about} className={styles.link} onClick={() => setOpen(false)}>About</Link>
-                    <Link to={paths.play} className={styles.link} onClick={() => setOpen(false)}>Play</Link>
-                    <Link to={paths.lobby} className={styles.link} onClick={() => setOpen(false)}>Lobby</Link>
+                    <Link to={paths.lobby} className={styles.link} onClick={() => setOpen(false)}>Play</Link>
+                    {!isLoggedIn ? (
+                        <>
+                            <Link to={paths.login} className={styles.link} onClick={() => setOpen(false)}>Login</Link>
+                            <Link to={paths.register} className={styles.link} onClick={() => setOpen(false)}>Register</Link>
+                        </>
+                    ) : (
+                        <ProfileMenu />
+                    )}
                 </div>
 
                 <div className={styles.linkWrap}>
                     <Link to={paths.home} className={styles.link} onClick={() => setOpen(false)}>Home</Link>
-                    <Link to={paths.about} className={styles.link} onClick={() => setOpen(false)}>About</Link>
-                    <Link to={paths.play} className={styles.link} onClick={() => setOpen(false)}>Play</Link>
-                    <Link to={paths.lobby} className={styles.link} onClick={() => setOpen(false)}>Lobby</Link>
+                    <Link to={paths.lobby} className={styles.link} onClick={() => setOpen(false)}>Play</Link>
+                    {!isLoggedIn ? (
+                        <>
+                            <Link to={paths.login} className={styles.link} onClick={() => setOpen(false)}>Login</Link>
+                            <Link to={paths.register} className={styles.link} onClick={() => setOpen(false)}>Register</Link>
+                        </>
+                    ) : null}
+                </div>
+
+                <div className={styles.authWrap}>
+                    {isLoggedIn ? <ProfileMenu /> : null}
                 </div>
             </nav>
         </header>

@@ -3,5 +3,5 @@ export default interface AnimeResultProps {
     animeName: string;
     imagePath: string;
     animeUrl: string;
-    genres: [string];
+    genres: string;
 }
