@@ -6,6 +6,7 @@ import Lobby from "../pages/lobby/Lobby";
 import Play from "../pages/play/Play";
 import PlayResults from "../pages/play/Results";
 import Profile from "../pages/Profile";
+import Leaderboard from "../pages/Leaderboard";
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
 import paths from "../constants/paths";
@@ -39,6 +40,7 @@ export default function AppRoutes() {
                 <Route path={paths.playResults} element={<PlayResults />} />
                 <Route path={paths.lobby} element={<Lobby />} />
                 <Route path={paths.profile} element={<Profile />} />
+                <Route path={paths.leaderboard} element={<Leaderboard />} />
                 <Route path={paths.login} element={<Login />} />
                 <Route path={paths.register} element={<Register />} />
             </Route>

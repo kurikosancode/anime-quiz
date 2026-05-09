@@ -1,5 +1,5 @@
 import { doc, getDoc, setDoc, collection, getDocs, query, orderBy, limit as limitQuery } from "firebase/firestore";
-import { db, isFirebaseConfigured } from "../firebase/firebaseClient";
+import { auth, db, isFirebaseConfigured } from "../firebase/firebaseClient";
 
 export type UserProfileGame = {
     id: string;
@@ -31,6 +31,15 @@ export type UserProfileDocument = {
 
 export type UserProfileView = UserProfileDocument & {
     averageScore: number;
+};
+
+export type LeaderboardEntry = {
+    uid: string;
+    username: string;
+    averageScore: number;
+    totalQuizzesPlayed: number;
+    totalQuestionsAttempted: number;
+    totalCorrectAnswers: number;
 };
 
 type SeedProfileInput = {
@@ -137,6 +146,17 @@ function buildFavoriteAnime(recentGames: UserProfileGame[]): string[] {
         .slice(0, 10);
 }
 
+function toLeaderboardEntry(profile: UserProfileDocument): LeaderboardEntry {
+    return {
+        uid: profile.uid,
+        username: profile.username,
+        averageScore: (profile.totalCorrectAnswers / Math.max(profile.totalQuestionsAttempted, 1)) * 100,
+        totalQuizzesPlayed: profile.totalQuizzesPlayed,
+        totalQuestionsAttempted: profile.totalQuestionsAttempted,
+        totalCorrectAnswers: profile.totalCorrectAnswers,
+    };
+}
+
 function normalizeProfileDocument(data: Partial<UserProfileDocument>, fallback: SeedProfileInput): UserProfileDocument {
     const recentGames = Array.isArray(data.recentGames) ? data.recentGames : [];
     const activityDays = Array.isArray(data.activityDays) ? data.activityDays : [];
@@ -147,7 +167,9 @@ function normalizeProfileDocument(data: Partial<UserProfileDocument>, fallback: 
         return sum + 1;
     }, 0);
     const totalQuizzesPlayed = typeof data.totalQuizzesPlayed === "number" ? data.totalQuizzesPlayed : inferredTotalGames;
-    const totalQuestionsAttempted = typeof data.totalQuestionsAttempted === "number" ? data.totalQuestionsAttempted : inferredTotalQuestions;
+    const totalQuestionsAttempted = typeof data.totalQuestionsAttempted === "number"
+        ? data.totalQuestionsAttempted
+        : (typeof data.totalQuizzesPlayed === "number" && data.totalQuizzesPlayed > 0 ? data.totalQuizzesPlayed : inferredTotalQuestions);
     const inferredTotalCorrect = recentGames.reduce((sum, game) => {
         if (typeof game.score === "number") return sum + game.score;
         if (Array.isArray(game.rounds)) return sum + game.rounds.reduce((s, r) => s + (r.score > 0 ? 1 : 0), 0);
@@ -219,11 +241,81 @@ export async function getUserProfile(uid: string, fallback?: SeedProfileInput): 
         provider: raw.provider ?? "password",
     };
     const profile = normalizeProfileDocument({ ...raw, uid, recentGames: fetchedRecent }, derivedFallback);
+
+    // Self-heal older documents that may be missing identity fields.
+    if (!raw.uid || !raw.username || !raw.email || !raw.provider) {
+        try {
+            await setDoc(doc(db, "users", uid), {
+                uid: profile.uid,
+                username: profile.username,
+                usernameLower: profile.usernameLower,
+                email: profile.email,
+                provider: profile.provider,
+                createdAt: profile.createdAt,
+            }, { merge: true });
+        } catch {
+            // ignore heal failures; profile can still render.
+        }
+    }
+
     const averageScore = profile.totalQuizzesPlayed > 0
         ? (profile.totalCorrectAnswers / Math.max(profile.totalQuestionsAttempted, 1)) * 100
         : 0;
 
     return { ...profile, averageScore };
+}
+
+export async function getLeaderboard(limitCount = 20): Promise<LeaderboardEntry[]> {
+    if (!isFirebaseConfigured || !db) return [];
+
+    try {
+        const usersCollection = collection(db, "users");
+        const snapshot = await getDocs(usersCollection);
+
+        const entries = snapshot.docs
+            .map((docSnapshot) => ({
+                raw: docSnapshot.data() as Partial<UserProfileDocument>,
+                uid: docSnapshot.id,
+            }))
+            .map(({ raw, uid }) => normalizeProfileDocument({ ...raw, uid: raw.uid ?? uid }, {
+                uid: raw.uid ?? uid,
+                username: raw.username ?? "Player",
+                email: raw.email ?? "",
+                provider: raw.provider ?? "password",
+            }))
+            .filter((profile) => profile.uid.length > 0 && profile.totalQuestionsAttempted > 0)
+            .map(toLeaderboardEntry);
+        console.log(entries, snapshot.docs.map((d) => d.data()));
+        return entries
+            .sort((first, second) => {
+                if (second.averageScore !== first.averageScore) return second.averageScore - first.averageScore;
+                if (second.totalQuestionsAttempted !== first.totalQuestionsAttempted) {
+                    return second.totalQuestionsAttempted - first.totalQuestionsAttempted;
+                }
+                return second.totalQuizzesPlayed - first.totalQuizzesPlayed;
+            })
+            .slice(0, limitCount);
+    } catch (error) {
+        const uid = auth?.currentUser?.uid;
+        if (!uid) return [];
+
+        const ownSnapshot = await readProfileSnapshot(uid);
+        if (!ownSnapshot?.exists()) return [];
+
+        const raw = ownSnapshot.data() as Partial<UserProfileDocument>;
+        const profile = normalizeProfileDocument(raw, {
+            uid,
+            username: raw.username ?? "Player",
+            email: raw.email ?? "",
+            provider: raw.provider ?? "password",
+        });
+
+        if (profile.totalQuestionsAttempted <= 0) return [];
+
+        // eslint-disable-next-line no-console
+        console.warn("Falling back to single-user leaderboard due to Firestore query restrictions:", error);
+        return [toLeaderboardEntry(profile)];
+    }
 }
 
 export async function recordQuizRound(input: RecordQuizRoundInput): Promise<void> {
@@ -290,6 +382,12 @@ export async function recordQuizRound(input: RecordQuizRoundInput): Promise<void
     }
 
     const nextProfile: Partial<UserProfileDocument> = {
+        uid: seed.uid,
+        username: seed.username,
+        usernameLower: seed.usernameLower,
+        email: seed.email,
+        provider: seed.provider,
+        createdAt: seed.createdAt,
         totalQuizzesPlayed,
         totalQuestionsAttempted,
         totalCorrectAnswers,
@@ -386,6 +484,12 @@ export async function recordGameSession(input: RecordGameSessionInput): Promise<
     }
 
     const nextProfile: Partial<UserProfileDocument> = {
+        uid: seed.uid,
+        username: seed.username,
+        usernameLower: seed.usernameLower,
+        email: seed.email,
+        provider: seed.provider,
+        createdAt: seed.createdAt,
         totalQuizzesPlayed,
         totalQuestionsAttempted,
         totalCorrectAnswers,

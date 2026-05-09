@@ -89,7 +89,7 @@ export default function Profile() {
 
 
             <section className={styles.streakSection}>
-                <h2 className={styles.sectionTitle}>Contribution Streak</h2>
+                <h2 className={styles.sectionTitle}>Quiz Streak</h2>
                 <StreakCalendar
                     currentStreak={profileData.currentStreak}
                     bestStreak={profileData.bestStreak}

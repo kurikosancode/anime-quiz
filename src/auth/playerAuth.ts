@@ -174,6 +174,15 @@ export async function loginPlayer(input: LoginInput): Promise<AuthResult> {
 
     try {
         const credentials = await signInWithEmailAndPassword(auth, email, password);
+
+        // Ensure legacy/missing user profile documents are repaired on login.
+        await upsertUserProfile({
+            uid: credentials.user.uid,
+            username: credentials.user.displayName || identifier || email.split("@")[0] || "Player",
+            email: credentials.user.email || email,
+            provider: "password",
+        });
+
         return {
             ok: true,
             message: "Logged in successfully.",
