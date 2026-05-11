@@ -1,17 +1,20 @@
 .page {
   min-height: 100vh;
-  background: #1a1a1a;
+  background:
+    radial-gradient(circle at top left, rgba(99, 217, 134, 0.16), transparent 28%),
+    radial-gradient(circle at top right, rgba(90, 147, 255, 0.14), transparent 24%),
+    linear-gradient(180deg, #171717 0%, #111111 100%);
   color: #f3f3f3;
-  padding: 2rem 1rem;
+  padding: 1.5rem 1rem;
 }
 
 .card {
-  max-width: 1000px;
+  max-width: 900px;
   margin: 0 auto;
   background: #242424;
   border: 1px solid #3c3c3c;
   border-radius: 12px;
-  padding: 1.5rem;
+  padding: 1.2rem;
 }
 
 .title {
@@ -61,6 +64,27 @@
 .rank {
   font-weight: 700;
   color: #f6c35e;
+}
+
+.playerWithAvatar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #680994 100%);
+  color: white;
+  font-weight: 700;
+  font-size: 0.95rem;
 }
 
 .player {

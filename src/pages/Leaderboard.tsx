@@ -39,7 +39,12 @@ export default function Leaderboard() {
                         {entries.map((entry, index) => (
                             <div key={entry.uid} className={styles.row}>
                                 <span className={styles.rank}>#{index + 1}</span>
-                                <span className={styles.player}>{entry.username}</span>
+                                <span className={styles.playerWithAvatar}>
+                                    <div className={styles.avatar}>
+                                        {entry.username.charAt(0).toUpperCase()}
+                                    </div>
+                                    <span className={styles.player}>{entry.username}</span>
+                                </span>
                                 <span className={styles.score}>{entry.averageScore.toFixed(1)}%</span>
                                 <span>{entry.totalQuizzesPlayed}</span>
                                 <span>{entry.totalQuestionsAttempted}</span>

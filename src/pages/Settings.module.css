@@ -1,0 +1,164 @@
+.page {
+  min-height: 100vh;
+  padding: 2rem 1rem;
+  background: #1a1a1a;
+  color: #f3f3f3;
+}
+
+.loadingState {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card {
+  max-width: 920px;
+  margin: 0 auto;
+  background: #242424;
+  border: 1px solid #3c3c3c;
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.loadingState .card {
+  margin: 0;
+}
+
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
+}
+
+.subtitle {
+  margin: 0.5rem 0 0;
+  color: #b8b8b8;
+}
+
+.backLink {
+  color: #63d986;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.form {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.55rem;
+  font-weight: 600;
+}
+
+.field input {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid #3c3c3c;
+  background: #1f1f1f;
+  color: #f3f3f3;
+  padding: 0.9rem 1rem;
+  font: inherit;
+}
+
+.field input:focus {
+  outline: none;
+  border-color: #63d986;
+  box-shadow: 0 0 0 3px rgba(99, 217, 134, 0.15);
+}
+
+.metaGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.metaItem {
+  padding: 1rem;
+  border-radius: 10px;
+  border: 1px solid #3c3c3c;
+  background: #1f1f1f;
+}
+
+.metaLabel {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: #b8b8b8;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.metaValue {
+  display: block;
+  word-break: break-word;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.primaryButton {
+  border: none;
+  border-radius: 10px;
+  padding: 0.9rem 1.2rem;
+  background: #63d986;
+  color: #102015;
+  font-weight: 700;
+}
+
+.primaryButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.loading {
+  margin: 0;
+  color: #b8b8b8;
+}
+
+.error,
+.success {
+  margin: 0;
+  padding: 0.9rem 1rem;
+  border-radius: 10px;
+}
+
+.error {
+  background: rgba(255, 107, 107, 0.14);
+  color: #ff9e9e;
+  border: 1px solid rgba(255, 107, 107, 0.25);
+}
+
+.success {
+  background: rgba(99, 217, 134, 0.14);
+  color: #8df3a4;
+  border: 1px solid rgba(99, 217, 134, 0.25);
+}
+
+@media (max-width: 720px) {
+  .headerRow {
+    flex-direction: column;
+  }
+
+  .metaGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .actions {
+    justify-content: stretch;
+  }
+
+  .primaryButton {
+    width: 100%;
+  }
+}

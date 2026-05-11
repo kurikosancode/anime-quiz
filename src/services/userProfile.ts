@@ -1,4 +1,5 @@
-import { doc, getDoc, setDoc, collection, getDocs, query, orderBy, limit as limitQuery } from "firebase/firestore";
+import { updateProfile } from "firebase/auth";
+import { doc, getDoc, setDoc, collection, getDocs, query, where, orderBy, limit as limitQuery } from "firebase/firestore";
 import { auth, db, isFirebaseConfigured } from "../firebase/firebaseClient";
 
 export type UserProfileGame = {
@@ -40,6 +41,16 @@ export type LeaderboardEntry = {
     totalQuizzesPlayed: number;
     totalQuestionsAttempted: number;
     totalCorrectAnswers: number;
+};
+
+export type UpdateUserSettingsInput = {
+    uid: string;
+    username: string;
+};
+
+export type UpdateUserSettingsResult = {
+    ok: boolean;
+    message: string;
 };
 
 type SeedProfileInput = {
@@ -505,5 +516,74 @@ export async function recordGameSession(input: RecordGameSessionInput): Promise<
         await setDoc(ref, nextProfile, { merge: true });
     } catch {
         return;
+    }
+}
+
+export async function updateUserSettings(input: UpdateUserSettingsInput): Promise<UpdateUserSettingsResult> {
+    if (!isFirebaseConfigured || !db) {
+        return {
+            ok: false,
+            message: "Firebase is not configured.",
+        };
+    }
+
+    const username = input.username.trim();
+    if (!username) {
+        return {
+            ok: false,
+            message: "Username cannot be empty.",
+        };
+    }
+
+    const usernameLower = normalizeUsername(username);
+    try {
+        const usersRef = collection(db, "users");
+        const playersQuery = query(usersRef, where("usernameLower", "==", usernameLower), limitQuery(1));
+        const existing = await getDocs(playersQuery);
+
+        const takenByAnotherPlayer = existing.docs.some((snapshot) => snapshot.id !== input.uid);
+        if (takenByAnotherPlayer) {
+            return {
+                ok: false,
+                message: "Username is already taken.",
+            };
+        }
+
+        const snapshot = await readProfileSnapshot(input.uid);
+        const raw = snapshot?.exists() ? (snapshot.data() as Partial<UserProfileDocument>) : {};
+        const profile = normalizeProfileDocument(
+            {
+                ...raw,
+                uid: input.uid,
+                username,
+                usernameLower,
+            },
+            {
+                uid: input.uid,
+                username,
+                email: raw.email ?? "",
+                provider: raw.provider ?? "password",
+            },
+        );
+
+        await setDoc(doc(db, "users", input.uid), {
+            ...profile,
+            username,
+            usernameLower,
+        }, { merge: true });
+
+        if (auth?.currentUser && auth.currentUser.uid === input.uid) {
+            await updateProfile(auth.currentUser, { displayName: username });
+        }
+
+        return {
+            ok: true,
+            message: "Settings saved successfully.",
+        };
+    } catch {
+        return {
+            ok: false,
+            message: "Failed to save settings. Please try again.",
+        };
     }
 }

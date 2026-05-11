@@ -81,6 +81,9 @@ export default function Navbar() {
                     <Link to={paths.profile} className={styles.profileMenuItem} onClick={() => setProfileMenuOpen(false)}>
                         Profile
                     </Link>
+                    <Link to={paths.settings} className={styles.profileMenuItem} onClick={() => setProfileMenuOpen(false)}>
+                        Settings
+                    </Link>
                     <button className={styles.profileMenuItem} onClick={handleLogout} type="button">
                         Logout
                     </button>
