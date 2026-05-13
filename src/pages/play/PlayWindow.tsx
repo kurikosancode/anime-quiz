@@ -2,28 +2,18 @@ import ChoiceBox from "../../components/choice_box/ChoiceBox";
 import style from "./PlayWindow.module.css";
 import COLORS from "../../constants/colors";
 import { useState, useEffect, useRef, useMemo } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import paths from "../../constants/paths";
 import { AnimeCharacterFetcher } from "../../api/AnimeCharacterFetcher";
 import { AnimeImageFetcher } from "../../api/AnimeImageFetcher";
 import random from "../../utils/random";
 import { getCurrentPlayer } from "../../auth/playerAuth";
 import { recordGameSession } from "../../services/userProfile";
+import { useGameSession } from "../../contexts/GameSessionContext";
 
 
 const boxColors = [COLORS.QUIZ_BLUE, COLORS.QUIZ_CYAN, COLORS.QUIZ_YELLOW, COLORS.QUIZ_RED];
 const roundStartDelay = 500;
-
-type LobbyNavigationState = {
-    animeNames: string[];
-    settings?: {
-        difficulty: string;
-        timeLimit: string;
-        questionCount: string;
-    };
-};
-
-type AnimeState = string[] | LobbyNavigationState;
 
 type PlayWindowProps = {
     onTimeProgressChange?: (progress: number) => void;
@@ -31,7 +21,7 @@ type PlayWindowProps = {
 
 
 function PlayWindow({ onTimeProgressChange }: PlayWindowProps) {
-    const { state } = useLocation() as { state?: AnimeState };
+    const { session } = useGameSession();
     const navigate = useNavigate();
     const [characters, setCharacters] = useState<string[]>([]);
     const [score, setScore] = useState<number>(0);
@@ -59,29 +49,24 @@ function PlayWindow({ onTimeProgressChange }: PlayWindowProps) {
     const sessionRoundsRef = useRef<Array<{ id: string; animeTitle: string; score: number; timestamp: number }>>([]);
 
     const animePool = useMemo(() => {
-        if (Array.isArray(state)) {
-            return state.filter((anime): anime is string => typeof anime === "string" && anime.length > 0);
-        }
-
-        return (state?.animeNames ?? []).filter((anime): anime is string => typeof anime === "string" && anime.length > 0);
-    }, [state]);
+        return (session?.animeNames ?? []).filter((anime): anime is string => typeof anime === "string" && anime.length > 0);
+    }, [session]);
 
     const difficulty = useMemo(() => {
-        if (!state || Array.isArray(state)) return "medium";
-        return state.settings?.difficulty ?? "medium";
-    }, [state]);
+        return session?.settings?.difficulty ?? "Normal";
+    }, [session]);
 
     const totalRounds = useMemo(() => {
-        if (!state || Array.isArray(state)) return undefined;
-        const count = parseInt(state.settings?.questionCount ?? "", 10);
+        if (!session) return undefined;
+        const count = parseInt(session.settings?.questionCount ?? "", 10);
         return Number.isFinite(count) && count > 0 ? count : undefined;
-    }, [state]);
+    }, [session]);
 
     const timeLimitSeconds = useMemo(() => {
-        if (!state || Array.isArray(state)) return 10;
-        const parsed = parseInt(state.settings?.timeLimit ?? "", 10);
+        if (!session) return 10;
+        const parsed = parseInt(session.settings?.timeLimit ?? "", 10);
         return Number.isFinite(parsed) && parsed > 0 ? parsed : 10;
-    }, [state]);
+    }, [session]);
 
     const revokeCurrentBlobUrl = () => {
         if (currentBlobUrlRef.current) {

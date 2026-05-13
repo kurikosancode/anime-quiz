@@ -1,7 +1,10 @@
 .page {
   min-height: 100vh;
   padding: 2rem 1rem;
-  background: #1a1a1a;
+  background:
+    radial-gradient(circle at top left, rgba(99, 217, 134, 0.16), transparent 28%),
+    radial-gradient(circle at top right, rgba(90, 147, 255, 0.14), transparent 24%),
+    linear-gradient(180deg, #171717 0%, #111111 100%);
   color: #f3f3f3;
 }
 

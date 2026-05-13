@@ -1,3 +1,3 @@
-const websiteName = "Lost and Found";
+const websiteName = "AniQuiz";
 
 export default { websiteName };

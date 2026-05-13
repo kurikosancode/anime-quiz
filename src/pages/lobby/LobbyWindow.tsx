@@ -11,6 +11,7 @@ import api from "../../constants/api";
 import { useState, useEffect, useRef, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import paths from "../../constants/paths";
+import { useGameSession } from "../../contexts/GameSessionContext";
 
 const difficultyOptions = ["Easy", "Normal", "Hard"] as const;
 const timeLimitOptions = ["5", "10", "15", "20"] as const;
@@ -22,13 +23,9 @@ type LobbySettings = {
     questionCount: (typeof questionCountOptions)[number];
 };
 
-type LobbyNavigationState = {
-    animeNames: string[];
-    settings: LobbySettings;
-};
-
 function LobbyWindow() {
     const navigate = useNavigate();
+    const { setSession } = useGameSession();
     const [value, setValue] = useState("");
     const [loading, setLoading] = useState(false);
     const [animeResults, setAnimeResults] = useState<AnimeResultProps[]>([]);
@@ -46,12 +43,12 @@ function LobbyWindow() {
             questionCount,
         };
 
-        navigate(paths.play, {
-            state: {
-                animeNames: animeInput.map(anime => anime.animeName),
-                settings,
-            } satisfies LobbyNavigationState,
+        setSession({
+            animeNames: animeInput.map(anime => anime.animeName),
+            settings,
         });
+
+        navigate(paths.play);
     };
 
     const clearSelection = () => {

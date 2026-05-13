@@ -30,6 +30,8 @@
 .authWrap {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
   margin-left: auto;
 }
 
@@ -41,6 +43,43 @@
   color: var(--red);
   text-decoration: none;
   font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.link:hover {
+  color: #63d986;
+}
+
+.loginButton {
+  color: #f4f4f4;
+  text-decoration: none;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  padding: 0.55rem 0.95rem;
+  border-radius: 999px;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.loginButton:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.registerButton {
+  color: #102015;
+  text-decoration: none;
+  font-weight: 700;
+  background: #63d986;
+  border: 1px solid rgba(99, 217, 134, 0.35);
+  padding: 0.55rem 0.95rem;
+  border-radius: 999px;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.registerButton:hover {
+  transform: translateY(-1px);
+  background: #78e39a;
 }
 
 .profileMenuWrap {
@@ -122,11 +161,11 @@
   left: -300px;
   height: 100vh;
   width: 250px;
-  background: white;
+  background: #1a1a1a;
   padding: 1.5rem;
   gap: 1.5rem;
-  border-right: 1px solid var(--border-color);
-  border-radius: 0 var(--div-radius) var(--div-radius) 0;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0;
   transition: left 0.3s ease-in-out;
   z-index: 1000;
 }
@@ -140,11 +179,17 @@
   align-items: center;
   flex-direction: row;
   gap: 1rem;
-  color: var(--red);
+  color: white;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .sidebarLink {
-  color: black;
+  color: #f4f4f4;
+}
+
+.sidebarLink:hover {
+  color: #63d986;
 }
 
 #xButton {
@@ -154,6 +199,7 @@
   font-size: 1.5rem;
   cursor: pointer;
   padding: 0;
+  color: white;
 }
 
 .hamburger {
@@ -162,6 +208,7 @@
   background: none;
   border: none;
   cursor: pointer;
+  color: white;
 }
 
 .overlay {
@@ -198,5 +245,17 @@
   .profileMenu {
     right: auto;
     left: 0;
+  }
+
+  .sidebar .link {
+    color: #f4f4f4;
+  }
+
+  .sidebar .link:hover {
+    color: #63d986;
+  }
+
+  .sidebar .profileMenuWrap {
+    margin-left: 0;
   }
 }

@@ -9,6 +9,10 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+html {
+  height: 100%;
+}
+
 *,
 *::before,
 *,
@@ -62,15 +66,15 @@ button:hover {
   }
 }
 
-html {
-  height: 100%;
-}
-body, #root {
+body,
+#root {
   display: flex;
   flex-direction: column;
   height: 100%;
   margin: 0;
   overflow-x: hidden;
+  background: #111111;
+  color: #f3f3f3;
 }
 
 header {

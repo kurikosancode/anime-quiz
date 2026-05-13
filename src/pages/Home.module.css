@@ -75,16 +75,25 @@
   color: #102015;
 }
 
+.primaryButton:hover {
+  transform: translateY(-1px);
+  color: #102015;
+}
+
 .secondaryButton {
   background: transparent;
   color: #f3f3f3;
   border: 1px solid #555;
 }
 
-.primaryButton:hover,
-.secondaryButton:hover,
+.secondaryButton:hover {
+  transform: translateY(-1px);
+  color: #f3f3f3;
+}
+
 .inlineLink:hover {
   transform: translateY(-1px);
+  color: #63d986;
 }
 
 .heroPanel {
@@ -266,7 +275,7 @@
 }
 
 .previewScore {
-  color: #63d986;
+  color: var(--ds-accent);
   font-weight: 800;
 }
 

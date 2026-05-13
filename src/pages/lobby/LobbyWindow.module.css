@@ -123,6 +123,17 @@
     font: inherit;
 }
 
+.settingField select:focus {
+    outline: none;
+    border-color: #595959;
+    box-shadow: none;
+}
+
+.settingField select option:hover {
+    background-color: #63d986;
+    color: #102015;
+}
+
 .settingSummary {
     display: flex;
     flex-wrap: wrap;

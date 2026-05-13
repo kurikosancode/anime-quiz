@@ -13,6 +13,8 @@ import Register from "../pages/auth/Register";
 import paths from "../constants/paths";
 import MainLayout from "../layouts/MainLayout";
 import { subscribeToAuthState } from "../auth/playerAuth";
+import { GameSessionProvider } from "../contexts/GameSessionContext";
+import ProtectedPlayRoute from "../components/ProtectedPlayRoute";
 
 function RootRedirect() {
     const navigate = useNavigate();
@@ -32,20 +34,29 @@ function RootRedirect() {
 
 export default function AppRoutes() {
     return (
-        <Routes>
-            <Route element={<MainLayout />}>
-                <Route path="/" element={<RootRedirect />} />
-                <Route path={paths.home} element={<Home />} />
-                <Route path={paths.about} element={<About />} />
-                <Route path={paths.play} element={<Play />} />
-                <Route path={paths.playResults} element={<PlayResults />} />
-                <Route path={paths.lobby} element={<Lobby />} />
-                <Route path={paths.profile} element={<Profile />} />
-                <Route path={paths.leaderboard} element={<Leaderboard />} />
-                <Route path={paths.settings} element={<Settings />} />
-                <Route path={paths.login} element={<Login />} />
-                <Route path={paths.register} element={<Register />} />
-            </Route>
-        </Routes>
+        <GameSessionProvider>
+            <Routes>
+                <Route element={<MainLayout />}>
+                    <Route path="/" element={<RootRedirect />} />
+                    <Route path={paths.home} element={<Home />} />
+                    <Route path={paths.about} element={<About />} />
+                    <Route
+                        path={paths.play}
+                        element={
+                            <ProtectedPlayRoute>
+                                <Play />
+                            </ProtectedPlayRoute>
+                        }
+                    />
+                    <Route path={paths.playResults} element={<PlayResults />} />
+                    <Route path={paths.lobby} element={<Lobby />} />
+                    <Route path={paths.profile} element={<Profile />} />
+                    <Route path={paths.leaderboard} element={<Leaderboard />} />
+                    <Route path={paths.settings} element={<Settings />} />
+                    <Route path={paths.login} element={<Login />} />
+                    <Route path={paths.register} element={<Register />} />
+                </Route>
+            </Routes>
+        </GameSessionProvider>
     );
 }

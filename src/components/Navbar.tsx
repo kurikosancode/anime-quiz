@@ -129,16 +129,17 @@ export default function Navbar() {
                     <Link to={paths.home} className={styles.link} onClick={() => setOpen(false)}>Home</Link>
                     <Link to={paths.lobby} className={styles.link} onClick={() => setOpen(false)}>Play</Link>
                     <Link to={paths.leaderboard} className={styles.link} onClick={() => setOpen(false)}>Leaderboard</Link>
+                </div>
+
+                <div className={styles.authWrap}>
                     {!isLoggedIn ? (
                         <>
                             <Link to={paths.login} className={styles.link} onClick={() => setOpen(false)}>Login</Link>
                             <Link to={paths.register} className={styles.link} onClick={() => setOpen(false)}>Register</Link>
                         </>
-                    ) : null}
-                </div>
-
-                <div className={styles.authWrap}>
-                    {isLoggedIn ? <ProfileMenu /> : null}
+                    ) : (
+                        <ProfileMenu />
+                    )}
                 </div>
             </nav>
         </header>
