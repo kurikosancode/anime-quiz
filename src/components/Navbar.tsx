@@ -114,6 +114,7 @@ export default function Navbar() {
 
                     <Link to={paths.home} className={styles.sidebarLink} onClick={() => setOpen(false)}>Home</Link>
                     <Link to={paths.lobby} className={styles.link} onClick={() => setOpen(false)}>Play</Link>
+                    <Link to={paths.userSearch} className={styles.link} onClick={() => setOpen(false)}>Users</Link>
                     <Link to={paths.leaderboard} className={styles.link} onClick={() => setOpen(false)}>Leaderboard</Link>
                     {!isLoggedIn ? (
                         <>
@@ -128,6 +129,7 @@ export default function Navbar() {
                 <div className={styles.linkWrap}>
                     <Link to={paths.home} className={styles.link} onClick={() => setOpen(false)}>Home</Link>
                     <Link to={paths.lobby} className={styles.link} onClick={() => setOpen(false)}>Play</Link>
+                    <Link to={paths.userSearch} className={styles.link} onClick={() => setOpen(false)}>Users</Link>
                     <Link to={paths.leaderboard} className={styles.link} onClick={() => setOpen(false)}>Leaderboard</Link>
                 </div>
 

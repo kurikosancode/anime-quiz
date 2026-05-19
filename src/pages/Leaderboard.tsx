@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import styles from "./Leaderboard.module.css";
 import { getLeaderboard, type LeaderboardEntry } from "../services/userProfile";
+import paths from "../constants/paths";
 
 export default function Leaderboard() {
     const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
@@ -39,12 +41,12 @@ export default function Leaderboard() {
                         {entries.map((entry, index) => (
                             <div key={entry.uid} className={styles.row}>
                                 <span className={styles.rank}>#{index + 1}</span>
-                                <span className={styles.playerWithAvatar}>
+                                <Link to={paths.profileUser(entry.uid)} className={styles.playerWithAvatar}>
                                     <div className={styles.avatar}>
                                         {entry.username.charAt(0).toUpperCase()}
                                     </div>
                                     <span className={styles.player}>{entry.username}</span>
-                                </span>
+                                </Link>
                                 <span className={styles.score}>{entry.averageScore.toFixed(1)}%</span>
                                 <span>{entry.totalQuizzesPlayed}</span>
                                 <span>{entry.totalQuestionsAttempted}</span>

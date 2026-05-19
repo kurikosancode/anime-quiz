@@ -6,6 +6,7 @@ import Lobby from "../pages/lobby/Lobby";
 import Play from "../pages/play/Play";
 import PlayResults from "../pages/play/Results";
 import Profile from "../pages/Profile";
+import UserSearch from "../pages/UserSearch.tsx";
 import Leaderboard from "../pages/Leaderboard";
 import Settings from "../pages/Settings.tsx";
 import Login from "../pages/auth/Login";
@@ -50,7 +51,9 @@ export default function AppRoutes() {
                     />
                     <Route path={paths.playResults} element={<PlayResults />} />
                     <Route path={paths.lobby} element={<Lobby />} />
+                    <Route path={paths.userSearch} element={<UserSearch />} />
                     <Route path={paths.profile} element={<Profile />} />
+                    <Route path={`${paths.profile}/:uid`} element={<Profile />} />
                     <Route path={paths.leaderboard} element={<Leaderboard />} />
                     <Route path={paths.settings} element={<Settings />} />
                     <Route path={paths.login} element={<Login />} />

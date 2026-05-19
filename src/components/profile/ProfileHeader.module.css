@@ -1,12 +1,20 @@
 .header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  justify-content: space-between;
   gap: 1.5rem;
   margin-bottom: 2.5rem;
   background-color: #242424;
   border-radius: 12px;
   border: 1px solid #3c3c3c;
   padding: 1.5rem;
+}
+
+.identityWrap {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  min-width: 0;
 }
 
 .avatarPlaceholder {
@@ -28,6 +36,7 @@
 
 .headerContent {
   flex: 1;
+  min-width: 0;
 }
 
 .username {
@@ -43,10 +52,26 @@
   font-size: 0.95rem;
 }
 
+.actionWrap {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  flex-shrink: 0;
+}
+
 @media (max-width: 480px) {
   .header {
     flex-direction: column;
     text-align: center;
+  }
+
+  .identityWrap {
+    flex-direction: column;
+  }
+
+  .actionWrap {
+    width: 100%;
+    justify-content: center;
   }
 
   .username {

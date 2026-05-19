@@ -276,6 +276,31 @@ export async function getUserProfile(uid: string, fallback?: SeedProfileInput): 
     return { ...profile, averageScore };
 }
 
+export async function findUserProfileByUsername(username: string): Promise<UserProfileView | null> {
+    if (!isFirebaseConfigured || !db) return null;
+
+    const usernameLower = normalizeUsername(username);
+    if (!usernameLower) return null;
+
+    try {
+        const usersCollection = collection(db, "users");
+        const playersQuery = query(usersCollection, where("usernameLower", "==", usernameLower), limitQuery(1));
+        const snapshot = await getDocs(playersQuery);
+        if (snapshot.empty) return null;
+
+        const raw = snapshot.docs[0].data() as Partial<UserProfileDocument>;
+        const uid = raw.uid ?? snapshot.docs[0].id;
+        return await getUserProfile(uid, {
+            uid,
+            username: raw.username ?? username,
+            email: raw.email ?? "",
+            provider: raw.provider ?? "password",
+        });
+    } catch {
+        return null;
+    }
+}
+
 export async function getLeaderboard(limitCount = 20): Promise<LeaderboardEntry[]> {
     if (!isFirebaseConfigured || !db) return [];
 

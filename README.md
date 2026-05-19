@@ -86,3 +86,5 @@ This project is prepared to use Firebase Authentication and Firestore for player
 6. Run the app with `npm run dev`.
 
 Firestore user documents are stored in `users/{uid}` and include `username`, `usernameLower`, `email`, and `createdAt`.
+
+Friend connections are stored in a top-level `friendships` collection. Each document represents one relationship between two users and keeps the requester, addressee, and current status (`pending`, `accepted`, or `blocked`). Username search uses the `usernameLower` field on `users/{uid}` for prefix lookups.

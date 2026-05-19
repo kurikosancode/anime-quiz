@@ -109,7 +109,7 @@ function LobbyWindow() {
     return (
         <div className={style.lobbyWindow}>
             <div className={style.hero}>
-                <h1 className={style.header}>Quiz Lobby</h1>
+                <h1 className={style.header}>Play Lobby</h1>
             </div>
 
             <div className={style.panelGrid}>

@@ -74,7 +74,7 @@ function Home() {
                     </div>
                     <div className={styles.heroStat}>
                         <span className={styles.heroStatLabel}>Progress</span>
-                        <strong className={styles.heroStatValue}>{topPlayers.length} ranked players</strong>
+                        <strong className={styles.heroStatValue}>{topPlayers.length} players</strong>
                     </div>
                 </div>
             </section>
@@ -85,7 +85,7 @@ function Home() {
                     <div className={styles.linkStack}>
                         <Link to={paths.profile} className={styles.inlineLink}>Your profile</Link>
                         <Link to={paths.settings} className={styles.inlineLink}>Account settings</Link>
-                        <Link to={paths.about} className={styles.inlineLink}>About the app</Link>
+                        <Link to={paths.userSearch} className={styles.inlineLink}>Search users</Link>
                     </div>
                 </div>
             </section>
